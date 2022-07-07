@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -Eeuo pipefail
+set -x
+
+
+
+# set env for flask
+export FLASK_ENV="development"
+export FLASK_APP="app"
+
+flask run

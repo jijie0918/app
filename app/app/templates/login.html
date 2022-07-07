@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-sm-4 my-auto">
+      <form action="{{ url_for('account_handler') }}?target={{ url_for('show_index')}}" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="fusername">Username</label>
+            <input type="text" name="username" id="fusername" class="form-control" placeholder="Enter username" required/>
+          </div>
+          <div class="form-group">
+            <label for="fpassword">Password</label>
+            <input type="password" class="form-control" name="password" id="fpassword" placeholder="Enter password" required />
+          </div>
+          <div class="form-group my-2">
+              <input type="submit" class="form-control" value="login" aria-describedby="registerHelp" />
+              <small id="registerHelp" class="form-text text-muted">
+                  Don't have an account? <span class="fw-bold"><a href="{{ url_for('signup') }}">Sign up</a></span>
+              </small>
+          </div>
+          <input type="hidden" name="operation" value="login" />
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

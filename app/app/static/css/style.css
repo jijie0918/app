@@ -1,0 +1,20 @@
+#banner {
+    background-color: #FFF;
+    border-bottom: 3px solid #AAA;
+}
+
+a {
+    text-decoration: none;
+    color: #000f;
+}
+
+#post {
+    background-color: #FFF;
+    border: 2px solid #AAA;
+}
+
+#profile-image {
+    width: 40;
+    height: 40;
+    border-radius: 50%;
+}

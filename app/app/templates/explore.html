@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+{% set ns = namespace() %}
+{% set ns.list_items = not_following %}
+{% set ns.header = "Discover People" %}
+{% set ns.is_explore = true %}
+{% include "follow_base.html"%}
+{% endblock content %}

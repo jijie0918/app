@@ -1,0 +1,66 @@
+<div class="col-md-8">
+    <h2>{{ns.header}}</h2>
+    {% for item in ns.list_items %}
+    <div class="card my-2">
+        <div class="p-2 d-flex flex-row justify-content-between">
+            <div class="d-flex flex-row justify-content-center align-items-baseline">
+                <div class="p-2">
+                    <img src="{{ url_for("download_file", name=item.profile_filename)}}" alt="user_img_url" class="profile-image rounded-circle" width=40 height=40>
+                </div>
+                <div class="p-2">
+                    <a href="{{ url_for("show_profile", username=item.username) }}">
+                        <p>
+                            {{ item.username }}
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="d-flex flex-row justify-content-center align-items-center">
+                {% if not ns.is_explore %}
+                {% if item.username != session.logname %}
+                    {% if item.logname_follow_username %}
+                    <div class="p-2">
+                        <p class="align-content-center">
+                            following
+                        </p>
+                    </div>
+                    <div>
+                        <form action="{{ url_for("following_handler")}}?target={{ url_for(request.endpoint, username=username)}}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="username" value="{{ item.username }}">
+                            <input type="hidden" name="operation" value="unfollow">
+                            <div class="form-group">
+                            <input type="submit" class="form-control" name="unfollow" value="unfollow">
+                            </div>
+                        </form>
+                    </div>
+                    {% else %}
+                    <div class="p-2">
+                        <p>
+                            not following
+                        </p>
+                    </div>
+                    <div>
+                        <form class action="{{ url_for("following_handler")}}?target={{ url_for(request.endpoint, username=username)}}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="username" value="{{ item.username }}">
+                            <input type="hidden" name="operation" value="follow">
+                            <div class="form-group">
+                            <input type="submit" class="form-control" name="follow" value="follow">
+                            </div>
+                        </form>
+                    </div>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                <form class action="{{ url_for("following_handler")}}?target={{ url_for(request.endpoint, username=username)}}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="username" value="{{ item.username }}">
+                    <input type="hidden" name="operation" value="follow">
+                    <div class="form-group">
+                    <input type="submit" class="form-control" name="follow" value="follow">
+                    </div>
+                </form>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

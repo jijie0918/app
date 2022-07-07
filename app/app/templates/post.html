@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="col-md-8">
+    <div class="card my-2">
+        <div class="row">
+            <div class="col-md-8">
+                <img class="img-fluid" src="{{ url_for("download_file", name=post.post_filename)}}" alt="img_url">
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex flex-column">
+                    <div class="d-flex justify-content-between p-2 px-3">
+                        <div class="d-flex flex-row align-items-center">
+                            <div class="p-1">
+                            <a href="{{ url_for("show_profile", username=post.owner)}}">
+                                <img src="{{ url_for("download_file", name=profile_filename )}}" alt="owner_img_url" class="profile-image rounded-circle" width=40 height=40 >
+                            </a>
+                            </div>
+                            <div class="p-1">
+                                <a href="{{ url_for("show_profile", username=post.owner)}}">
+                                    <span class="font-weight-bold">{{ post.owner }}</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-row mt-1 align-items-center">
+                            <small>
+                                <a style="color: #AAA" href="/posts/{{ post.postid }}/"> {{ post.created }}</a>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="p-2">
+                        <div>
+                            {% if likes != 1 %}
+                                <p>{{ likes }} likes</p>
+                            {% else %}
+                                <p>{{ likes }} like</p>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {% for comment in comments %}
+                                <div class="d-flex flex-row">
+                                    <div class="pe-2">
+                                        <p class="text-justify"><a href="{{ url_for("show_profile", username=comment.owner)}}">{{ comment.owner }}</a> {{ comment.text }}</p>
+                                    </div>
+                                    {% if comment.owner == session.logname %}
+                                        <div class="px-2">
+                                            <form action="{{url_for("comment_handler")}}?target={{url_for(request.endpoint, postid=post.postid)}}" method="post" enctype="multipart/form-data">
+                                                <input type="hidden" name="operation" value="delete" />
+                                                <input type="hidden" name="commentid" value={{comment.commentid}} />
+                                                <div class="form-group">
+                                                  <input type="submit" class="form-control" name="uncomment" value="delete">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-sm-3 py-2">
+                            {% if logname_like_posts %}
+                                <form action="{{ url_for("like_handler")}}?target={{url_for(request.endpoint, postid=post.postid)}}" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="operation" value="unlike"/>
+                                    <input type="hidden" name="postid" value="{{ post.postid }}" />
+                                    <input type="submit" class="form-control" name="unlike" value="unlike">
+                                </form>
+                            {% else %}
+                                <form action="{{ url_for("like_handler")}}?target={{url_for(request.endpoint, postid=post.postid)}}" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="operation" value="like"/>
+                                    <input type="hidden" name="postid" value="{{ post.postid }}" />
+                                    <input type="submit" class="form-control" name="like" value="like">
+                                </form>
+                            {% endif %}
+                        </div>
+                        <div class="p-2">
+                            <form action="{{ url_for("comment_handler")}}?target={{ url_for(request.endpoint, postid=post.postid)}}" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="operation" value="create">
+                                <input type="hidden" name="postid" value="{{ post.postid }}">
+                                <div class="form-group">
+                                <input type="text" class="form-control" name="text">
+                                </div>
+                                <div class="form-group mt-2">
+                                <input type="submit" class="form-control" name="comment" value="comment">
+                                </div>
+                            </form>
+                        </div>
+                        {% if session.logname == post.owner %}
+                        <div class="p-2">
+                            <form action="{{url_for("post_handler")}}?target={{ url_for("show_profile", username=session.logname)}}" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="operation" value="delete" />
+                                <input type="hidden" name="postid" value="{{ post.postid }}" />
+                                <div class="form-group">
+                                  <input type="submit" class="form-control" name="delete" value="delete this post">
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+        </div>
+    </div>
+
+    </div>
+{% endblock content %}

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -Eeuo pipefail
+set -x
+
+create() {
+    mkdir -p var/uploads
+    sqlite3 var/app.sqlite3 <sql/schema.sql
+    sqlite3 var/app.sqlite3 <sql/data.sql
+    cp sql/uploads/* var/uploads/
+}
+
+destroy() {
+    rm -rf var/app.sqlite3 var/uploads
+}
+
+
+usage() {
+    echo "Usage: $0 (create|destroy|reset)"
+}

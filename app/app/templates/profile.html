@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="col-md-8">
+    <div class="user d-flex flex-column justify-content-center">
+        <h2>{{ username }}</h2>
+        {% if username != session.logname %}
+            <div class="d-flex flex-row align-items-baseline">
+            {% if logname_follow_username %}
+                <p class="pe-2">following </p>
+                <form action="{{ url_for("following_handler")}}?target={{ url_for(request.endpoint, username=username)}}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="username" value="{{ username }}">
+                    <input type="hidden" name="operation" value="unfollow">
+                    <div class="form-group">
+                    <input type="submit" class="form-control" name="unfollow" value="unfollow">
+                    </div>
+                </form>
+            {% else %}
+                <p class="pe-2">not following</p>
+                <form class action="{{ url_for("following_handler")}}?target={{ url_for(request.endpoint, username=username)}}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="username" value="{{ username }}">
+                    <input type="hidden" name="operation" value="follow">
+                    <div class="form-group">
+                    <input type="submit" class="form-control" name="follow" value="follow">
+                    </div>
+                </form>
+            {% endif %}
+            </div>
+        {% else %}
+            <p class="fw-bold">
+                <a href="{{ url_for("edit_profile")}}">
+                    Edit profile
+                </a>
+            </p>
+            <form class="col-sm-2" action="{{ url_for("logout") }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="submit" class="form-control" name="logout" value="Logout">
+                </div>
+            </form>
+        {% endif %}
+        <div class="d-flex flex-row">
+            <p class="pe-2">
+                {% if posts | length >= 2 %}
+                {{ posts | length }} posts
+                {% else %}
+                {{ posts | length }} post
+                {% endif %}
+            </p>
+            <a href="{{ url_for("show_follower", username=username) }}">
+                <p class="px-2">
+                    {% if follower >= 2 %}
+                    {{ follower }} followers
+                    {% else %}
+                    {{ follower }} follower
+                    {% endif %}
+                </p>
+            </a>
+            <a href="{{ url_for("show_following", username=username) }}">
+                <p class="px-2">
+                    {{ following }} following
+                </p>
+            </a>
+        </div>
+        <p>{{ fullname }}</p>
+    </div>
+    {% if username == session.logname %}
+    <form class="d-flex flex-row justify-content-start align-align-items-baseline" action="{{ url_for("post_handler")}}?target={{ url_for(request.endpoint, username=username) }}" method="post" enctype="multipart/form-data">
+        <input type="file" class="form-control" name="file" accept="image/*" required />
+        <div class="px-2">
+            <input type="submit" class="form-control" name="create_post" value="upload new post" />
+        </div>
+        <input type="hidden" name="operation" value="create" />
+    </form>
+    {% endif %}
+    <div class="posts row">
+        {% for post in posts %}
+        <div class="post col-md-6 p-2">
+            <a href="{{ url_for("show_post", postid=post.postid)}}">
+                <img src="{{ url_for("download_file", name=post.filename)}}" alt="img_url" class="img-fluid">
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
