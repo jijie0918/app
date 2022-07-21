@@ -12,6 +12,7 @@ URLs include:
 import flask
 from app import app
 from app.models import get_db
+from app.utils import redirect_to_login_if_session_is_not_valid
 
 
 @app.route('/accounts/login/')
@@ -71,7 +72,7 @@ def edit_profile():
         Reponse: rendered template
         If not login, return login page
     """
-    login_page = app.utils.redirect_to_login_if_session_is_not_valid()
+    login_page = redirect_to_login_if_session_is_not_valid()
     if login_page is not None:
         return login_page
 

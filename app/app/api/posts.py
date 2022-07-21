@@ -4,6 +4,7 @@ from app import app
 from app.utils import authen_rest_api_and_get_logname
 from app.get_context import get_post_context
 from app.api.exceptions import BadRequestException
+from app.models import get_db
 
 INT_MAX = 2147483647
 
@@ -13,7 +14,7 @@ def get_newest_posts_api():
     """Return the 10 newest posts."""
     logname = authen_rest_api_and_get_logname()
     # set connection and authenticate the user
-    conn = app.models.get_db()
+    conn = get_db()
     postid_lte = flask.request.args.get('postid_lte',
                                         default=INT_MAX,
                                         type=int)

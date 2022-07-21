@@ -2,6 +2,7 @@
 import json
 import flask
 from app import app
+from app.models import get_db
 from app.api.exceptions import BadRequestException
 from app.api.exceptions import NotFoundException, ForbiddenException
 from app.utils import authen_rest_api_and_get_logname
@@ -11,7 +12,7 @@ from app.utils import authen_rest_api_and_get_logname
 def get_comment_api(commentid):
     """Delete comment in DB."""
     logname = authen_rest_api_and_get_logname()
-    conn = app.models.get_db()
+    conn = get_db()
     curr = conn.execute("SELECT * "
                         "FROM comments "
                         "WHERE commentid=?", (commentid, ))
@@ -32,7 +33,7 @@ def post_comment_api():
     logname = authen_rest_api_and_get_logname()
     if 'postid' not in flask.request.args:
         raise BadRequestException
-    conn = app.model.get_db()
+    conn = get_db()
     text = json.loads(flask.request.data)['text']
     curr = conn.execute(
         "INSERT INTO comments(owner, postid, text) "

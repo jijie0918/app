@@ -2,6 +2,7 @@
 import flask
 from app import app
 from app.utils import authen_rest_api_and_get_logname
+from app.models import get_db
 from app.api.exceptions import BadRequestException
 from app.api.exceptions import NotFoundException, ForbiddenException
 
@@ -10,7 +11,7 @@ from app.api.exceptions import NotFoundException, ForbiddenException
 def get_like_api(likeid):
     """Delete like in DB."""
     logname = authen_rest_api_and_get_logname()
-    conn = app.models.get_db()
+    conn = get_db()
     curr = conn.execute("SELECT * "
                         "FROM likes "
                         "WHERE likeid = ?", (likeid, ))
@@ -32,7 +33,7 @@ def post_like_api():
     if 'postid' not in flask.request.args:
         raise BadRequestException
     logname = authen_rest_api_and_get_logname()
-    conn = app.models.get_db()
+    conn = get_db()
     curr = conn.execute("SELECT * "
                         "FROM likes l "
                         "INNER JOIN posts p "
